@@ -1,0 +1,53 @@
+# Maintainer: {{maintainer.name}} <{{maintainer.email}}>
+# 
+_pkgbase='mollysocket'
+pkgname=$_pkgbase-git
+pkgver=1
+pkgrel=1
+pkgdesc='MollySocket allows getting signal notifications via UnifiedPush'
+provides=("${_pkgbase}")
+conflicts=($_pkgbase "${_pkgbase}-bin")
+arch=('any')
+url='https://github.com/mollyim/mollysocket'
+license=('AGPL')
+makedepends=('git' 'rust')
+checkdepends=('rust')
+install=mollysocket.install
+backup=('etc/mollysocket/config.toml')
+source=("${_pkgbase}::git+https://github.com/mollyim/mollysocket#branch=main"
+	"mollysocket.service"
+	"mollysocket.tmpfile.d"
+	"sysuser.conf"
+	"mollysocket.install"	
+)
+sha256sums=('SKIP'
+	"df73cb642db33bc6032d593d49f0090459f1d637fd7c54b0c44a2304d961d6d1"
+	"f8d1505b7e5e8516b46379ebbee7b73bc2166eb76d9f895f9f96c0e1bf880c81"
+	"f83103af9f921da7cd84d0c10985e5eaec052e9def47cfda8d9503b627254d70"
+	"d825c8cd0a44a515e57d7b6fea400970319674b743705d105a6e8c071cc234e3"	
+)
+
+pkgver() {
+	cd "$_pkgbase"
+	printf "r%s.%s" "$(git rev-list --count HEAD)" "$(git rev-parse --short HEAD)"
+}
+
+build() {
+	cd "$_pkgbase"
+	cargo build --release --bin $_pkgbase
+}
+
+check() {
+	cd "$_pkgbase"
+	cargo test --release
+}
+
+package() {
+	cd "$_pkgbase"
+	install -Dm755 "target/release/mollysocket" "$pkgdir/usr/bin/mollysocket"
+	install -Dm644 LICENSE.txt "$pkgdir"/usr/share/licenses/$_pkgbase/LICENSE
+	install -Dm 0644 ../../mollysocket.service "$pkgdir"/usr/lib/systemd/system/mollysocket.service
+	install -Dm 0644 ../../mollysocket.tmpfile.d "$pkgdir"/usr/lib/tmpfiles.d/mollysocket.conf
+	install -Dm644 ../../sysuser.conf "$pkgdir"/usr/lib/sysusers.d/mollysocket.conf
+	install -Dm644 ../../config.toml "$pkgdir"/etc/mollysocket/config.toml
+}

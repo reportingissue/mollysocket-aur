@@ -1,0 +1,25 @@
+[Unit]
+Description=MollySocket
+After=network-online.target
+
+[Service]
+Type=simple
+Environment="RUST_LOG=info"
+ConfigurationDirectory=/etc/mollysocket
+WorkingDirectory=/var/lib/mollysocket
+
+User=mollysocket
+Group=mollysocket
+UMask=0007
+
+ExecStart=/usr/bin/mollysocket server
+
+Restart=on-failure
+
+# Configures the time to wait before service is stopped forcefully.
+KillMode=mixed
+KillSignal=SIGINT
+TimeoutStopSec=5
+
+[Install]
+WantedBy=multi-user.target

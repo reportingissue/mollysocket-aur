@@ -1,0 +1,54 @@
+# Maintainer: {{maintainer.name}} <{{maintainer.email}}>
+# 
+_pkgbase=mollysocket
+pkgname=$_pkgbase
+pkgver=1.2.0
+pkgrel=1
+pkgdesc='Allows getting signal notifications via UnifiedPush'
+provides=("${_pkgbase}")
+conflicts=("${_pkgbase}-git" "${_pkgbase}-bin")
+arch=(any)
+url='https://github.com/mollyim/mollysocket'
+license=('AGPL')
+makedepends=(rust)
+checkdepends=('rust')
+install=mollysocket.install
+backup=('etc/mollysocket/config.toml')
+source=("$_pkgbase-$pkgver"::"https://github.com/mollyim/mollysocket/archive/refs/tags/${pkgver}.tar.gz"
+	"mollysocket.service"
+	"mollysocket.tmpfile.d"
+	"sysuser.conf"
+	"mollysocket.install"
+	"config.toml"
+)
+sha256sums=('SKIP'
+	"df73cb642db33bc6032d593d49f0090459f1d637fd7c54b0c44a2304d961d6d1"
+	"f8d1505b7e5e8516b46379ebbee7b73bc2166eb76d9f895f9f96c0e1bf880c81"
+	"f83103af9f921da7cd84d0c10985e5eaec052e9def47cfda8d9503b627254d70"
+	"d825c8cd0a44a515e57d7b6fea400970319674b743705d105a6e8c071cc234e3"
+	"2393bb45cf39288a0c05552ec4c16ffa2935b2dab833c3868c1ec1b118da2869"
+)
+
+build() {
+	cd "$_pkgbase-$pkgver"
+	cargo build --release --bin $_pkgbase
+}
+
+check() {
+	cd "$_pkgbase-$pkgver"
+	cargo test --release
+}
+
+package() {
+	cd "$_pkgbase-$pkgver"
+	install -Dm755 "target/release/mollysocket" "$pkgdir/usr/bin/mollysocket"
+	install -Dm644 LICENSE.txt "$pkgdir"/usr/share/licenses/$_pkgbase/LICENSE
+
+	cd "$srcdir"
+	# systemd
+	install -Dm 0644 mollysocket.service "$pkgdir"/usr/lib/systemd/system/mollysocket.service
+	install -Dm 0644 mollysocket.tmpfile.d "$pkgdir"/usr/lib/tmpfiles.d/mollysocket.conf
+	install -Dm644 sysuser.conf "$pkgdir"/usr/lib/sysusers.d/mollysocket.conf
+	# db path
+	install -Dm644 config.toml "$pkgdir"/etc/mollysocket/config.toml
+}
