@@ -1,0 +1,13 @@
+# Remove mollysocket data on uninstall
+
+[Trigger]
+Operation = Remove
+Type = Package
+Target = mollysocket
+Target = mollysocket-bin
+Target = mollysocket-git
+
+[Action]
+Description = Remove mollysocket data
+When = PreTransaction
+Exec = /usr/bin/rm -rf /var/lib/mollysocket

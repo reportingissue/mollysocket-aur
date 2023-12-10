@@ -39,7 +39,7 @@ build() {
 
 check() {
 	cd "$_pkgbase"
-	cargo test --release
+	MOLLY_DB="./mollysocket.db" cargo test --release
 }
 
 package() {
@@ -50,4 +50,5 @@ package() {
 	install -Dm 0644 ../../mollysocket.tmpfile.d "$pkgdir"/usr/lib/tmpfiles.d/mollysocket.conf
 	install -Dm644 ../../sysuser.conf "$pkgdir"/usr/lib/sysusers.d/mollysocket.conf
 	install -Dm644 ../../config.toml "$pkgdir"/etc/mollysocket/config.toml
+	install -Dm644 ../../mollysocket-remove.hook "$pkgdir"/usr/share/libalpm/hooks/mollysocket-remove.hook
 }
