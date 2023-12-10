@@ -30,10 +30,6 @@
 - create an initial config file in `/etc/mollysocket`
 - needed so unpriviledged users can run `sudo mollysocket connection add ...` while pointing to the correct db
 
-#### `mollysocket-remove.hook`
-- deletes the data dir `/var/lib/mollysocket` on `pacman -R` and only then (not upgrade or sidegrade)
-- must run as pretransaction hook because pacman removes it as well
-
 ### SystemD
 #### `mollysocket.service`
 - main systemd unit file
@@ -45,4 +41,4 @@
 - systemd will create `/var/lib/mollysocket/` directory as the `mollysocket` user
 
 #### `mollysocket.install`
-- when uninstalling, list the leftover directories so the user can manually remove them if the hook failed for whatever reason
+- when uninstalling, remove `/var/lib/mollysocket` and `/etc/mollysocket` if they exist

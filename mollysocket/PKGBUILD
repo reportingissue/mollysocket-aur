@@ -20,7 +20,6 @@ source=("$_pkgbase-$pkgver"::"https://github.com/mollyim/mollysocket/archive/ref
 	"sysuser.conf"
 	"mollysocket.install"
 	"config.toml"
-	"mollysocket-remove.hook"
 )
 sha256sums=('SKIP'
 	"df73cb642db33bc6032d593d49f0090459f1d637fd7c54b0c44a2304d961d6d1"
@@ -28,7 +27,6 @@ sha256sums=('SKIP'
 	"f83103af9f921da7cd84d0c10985e5eaec052e9def47cfda8d9503b627254d70"
 	"d825c8cd0a44a515e57d7b6fea400970319674b743705d105a6e8c071cc234e3"
 	"2393bb45cf39288a0c05552ec4c16ffa2935b2dab833c3868c1ec1b118da2869"
-	"3e5e37b689094e1f6750a79a63bae287248dc2fe0458a084697b95e47f4ecbe5"
 )
 
 build() {
@@ -51,5 +49,4 @@ package() {
 	install -Dm 0644 mollysocket.tmpfile.d "$pkgdir"/usr/lib/tmpfiles.d/mollysocket.conf
 	install -Dm644 sysuser.conf "$pkgdir"/usr/lib/sysusers.d/mollysocket.conf
 	install -Dm644 config.toml "$pkgdir"/etc/mollysocket/config.toml
-	install -Dm644 mollysocket-remove.hook "$pkgdir"/usr/share/libalpm/hooks/mollysocket-remove.hook
 }
