@@ -1,3 +1,10 @@
+post_install() {
+	mkdir -p /var/lib/mollysocket
+	touch /var/lib/mollysocket/mollysocket.db
+	chown -R mollysocket:mollysocket /var/lib/mollysocket
+	chmod 600 /var/lib/mollysocket/mollysocket.db
+}
+
 post_remove() {
 	paths=(/var/lib/mollysocket)
 	for path in ${paths[@]}; do
