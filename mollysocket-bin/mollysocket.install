@@ -1,0 +1,20 @@
+post_install() {
+	mkdir -p /var/lib/mollysocket
+	touch /var/lib/mollysocket/mollysocket.db
+	chown -R mollysocket:mollysocket /var/lib/mollysocket
+	chmod 600 /var/lib/mollysocket/mollysocket.db
+}
+
+pre_remove() {
+	systemctl stop mollysocket
+}
+
+post_remove() {
+	paths=(/var/lib/mollysocket)
+	for path in ${paths[@]}; do
+		if [ -d $path ]; then
+			echo "Removing: $path"
+			rm -rf $path
+		fi
+	done
+}
