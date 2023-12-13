@@ -10,8 +10,8 @@ conflicts=("${_pkgbase}-git" "${_pkgbase}-bin")
 arch=(any)
 url='https://github.com/mollyim/mollysocket'
 license=('AGPL')
-makedepends=(rust)
-checkdepends=('rust')
+makedepends=(cargo)
+checkdepends=('cargo')
 install=mollysocket.install
 backup=('etc/mollysocket/config.toml')
 source=("$_pkgbase-$pkgver"::"https://github.com/mollyim/mollysocket/archive/refs/tags/${pkgver}.tar.gz"
@@ -25,17 +25,19 @@ sha256sums=('SKIP'
 	"df73cb642db33bc6032d593d49f0090459f1d637fd7c54b0c44a2304d961d6d1"
 	"f8d1505b7e5e8516b46379ebbee7b73bc2166eb76d9f895f9f96c0e1bf880c81"
 	"f83103af9f921da7cd84d0c10985e5eaec052e9def47cfda8d9503b627254d70"
-	"d825c8cd0a44a515e57d7b6fea400970319674b743705d105a6e8c071cc234e3"
+	"37164cc172894617e648840b7b594dd2106ec16398bb61d7d954f9c1cc01a36a"
 	"2393bb45cf39288a0c05552ec4c16ffa2935b2dab833c3868c1ec1b118da2869"
 )
 
 build() {
 	cd "$_pkgbase-$pkgver"
+	export RUSTUP_TOOLCHAIN=stable
 	cargo build --release --bin $_pkgbase
 }
 
 check() {
 	cd "$_pkgbase-$pkgver"
+	export RUSTUP_TOOLCHAIN=stable
 	MOLLY_DB="./mollysocket.db" cargo test --release
 }
 
